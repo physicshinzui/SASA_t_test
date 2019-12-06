@@ -13,4 +13,5 @@ plt.hist(st_sasa['PHE66'], bins=[i for i in np.arange(0, 1.0, 0.02)], histtype='
 plt.hist(st_sasa['PHE58'], bins=[i for i in np.arange(0, 1.0, 0.02)], histtype='step', linewidth = 2)
 plt.hist(st_sasa['TRP98'], bins=[i for i in np.arange(0, 1.0, 0.02)], histtype='step', linewidth = 2)
 plt.hist(st_sasa['HIS138'], bins=[i for i in np.arange(0, 1.0, 0.02)], histtype='step', linewidth = 2)
+plt.hist(st_sasa['TRP25'], bins=[i for i in np.arange(0, 1.0, 0.02)], histtype='step', linewidth = 2)
 plt.show()

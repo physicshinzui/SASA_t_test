@@ -14,10 +14,10 @@ def get_residue_tag():
 
 def standardized_sasa(dict_sasa):
     # the sasa [nm^2] were calculated for the atoms without hydrogens
-    sasa_values_of_naked_aa = {'PHE': 1.72494,
-                               'TYR': 1.79265,
-                               'TRP': 2.00880,
-                               'HIS': 1.55901}
+    sasa_values_of_naked_aa = {'PHE': 3.12518,
+                               'TYR': 3.37539,
+                               'TRP': 3.70723,
+                               'HIS': 3.17074}
     st_dict_sasa = {}
     print('Note: I do not standardize sasa of non-aromatic residues cuz they are out of my scope.')
     for key in dict_sasa.keys():
