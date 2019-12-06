@@ -1,0 +1,8 @@
+/input/
+/trash/
+/input_traj/
+*.pse
+*.pdb
+*.tpr
+*.pkl
+*.out
