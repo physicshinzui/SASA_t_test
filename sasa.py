@@ -5,8 +5,8 @@ from MDAnalysis import Universe
 import sys
 import pickle
 
-def get_residue_tag():
-    u = Universe('template.pdb')
+def get_residue_tag(topology):
+    u = Universe(topology)
     residue_tags = []
     for resn, resi in zip(u.residues.resnames, u.residues.resids):
         residue_tags.append(resn+str(resi))
@@ -47,10 +47,11 @@ def main():
     trj_file = 'input_traj/cat_npt_prod_skip100.xtc'
     #trj_file = 'test/test.xtc'
     #trj_file = '../../../data/bcl_xl@ambient/data/traj/cat_npt_prod.xtc'
+    top = 'template.pdb'
     traj = md.load(trj_file, top='template.pdb')
     print(traj)
 
-    keys = get_residue_tag()
+    keys = get_residue_tag(top)
     print(keys)
     trj_sasa = md.shrake_rupley(traj, 
                                 probe_radius=0.14, 
