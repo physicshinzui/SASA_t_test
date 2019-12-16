@@ -68,7 +68,7 @@ def count_two_states_buri_and_expos(st_sasa):
 
             else:
                 no_of_nonvaried_sasa += 1
-                print('not vaired')
+                print('not vaired', no_of_nonvaried_sasa)
 
     return (no_of_varied_sasa, no_of_nonvaried_sasa)
 
@@ -89,7 +89,7 @@ def main():
     print(f'The number of candidates: {ctable[0]}, filtered: {ctable[1]}')
 
 #    draw_some(st_sasa)
-    plt.show()
+    #plt.show()
 
 if __name__=='__main__':
     main()
