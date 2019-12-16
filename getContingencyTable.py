@@ -2,6 +2,7 @@
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt
+import isResiInCryptic
 
 def ratio_pe_pb(st_sasa_resn):
     bin_start, bin_end, interval = 0, 1, 0.02
@@ -11,8 +12,6 @@ def ratio_pe_pb(st_sasa_resn):
     hist_xpoints = np.array([edge+half_width for edge in bin_edges[:-1]])
 
     boundary_buried_exposed = 0.1 # boundary for standardised ASA [no unit]
-    #exposed_upper_cutoff = 0.2
-    #buried_upper_cutoff  = 0.1
 
     index_Pe = np.where(hist_xpoints > boundary_buried_exposed)[0]
     index_Pb = np.where(hist_xpoints <= boundary_buried_exposed)[0]
@@ -22,23 +21,9 @@ def ratio_pe_pb(st_sasa_resn):
     xb       = hist_xpoints[hist_xpoints < boundary_buried_exposed]
 
     Peb = np.sum(Pe) / np.sum(Pb)
-    #return Peb
-
-    # making a middle cumu prob
-    #index_Pmid1 = [index for index in hist_xpoints if (index not in index_Pe) and (index not in index_Pb) ]
-    #m1 = np.where(hist_xpoints <= exposed_upper_cutoff,True, False)
-    #m2 = np.where(hist_xpoints >= buried_upper_cutoff ,True, False)
-    #masks = m1 * m2
-    #Pmid = [prob for mask, prob in zip(masks, probs) if mask]
-    #xmid = [x for mask, x in zip(masks, hist_xpoints) if mask]
-    #print(masks, Pmid)
 
     plt.plot(xe, Pe)
-    #plt.plot(xmid, Pmid)
     plt.plot(xb, Pb)
-#    plt.plot(hist_xpoints, probs)
-#    plt.hist(st_sasa_resn)
-
     return Peb
 
 def isASAVaried(Reb):
@@ -52,25 +37,24 @@ def isASAVaried(Reb):
         return False
 
 def count_two_states_buri_and_expos(st_sasa):
-    no_of_varied_sasa    = 0
-    no_of_nonvaried_sasa = 0
+    S_varied    = []
+    S_not_varied = []
     for key in st_sasa:
         # -- i just concentrate on aromatic residues.
         # -- the iput pkl file must be modified if you want to check the other residues out, because they've not been normalised.
-        if key[0:3] == 'PHE' or key[0:3] == 'TRP' or key[0:3] == 'TYR' or key[0:3] == 'HIS':
+        if key[0:3] in ['PHE','TRP','TYR','HIS']:
             # -- Calculate the ratio (Reb) of exposed states to buried ones.
             Reb = ratio_pe_pb(st_sasa[key])
-            #print(key, Reb, isASAVaried(Reb))
 
             if isASAVaried(Reb):
-                no_of_varied_sasa += 1
+                S_varied.append(key)
                 print(key, 'vaired')
 
             else:
-                no_of_nonvaried_sasa += 1
-                print('not vaired', no_of_nonvaried_sasa)
+                S_not_varied.append(key)
+                print('not vaired')
 
-    return (no_of_varied_sasa, no_of_nonvaried_sasa)
+    return set(S_varied), set(S_not_varied)
 
 def draw_some(st_sasa):
     ratio_pe_pb(st_sasa['PHE66'])
@@ -86,7 +70,7 @@ def main():
     st_sasa = pickle.load(f2)
 
     ctable = count_two_states_buri_and_expos(st_sasa)
-    print(f'The number of candidates: {ctable[0]}, filtered: {ctable[1]}')
+    print(f'Candidates: {ctable[0]}, filtered: {ctable[1]}')
 
 #    draw_some(st_sasa)
     #plt.show()
