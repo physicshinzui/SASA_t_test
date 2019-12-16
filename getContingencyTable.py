@@ -64,6 +64,7 @@ def main():
     sasa    = pickle.load(f1)
     st_sasa = pickle.load(f2)
 
+    # -- sets of residues are generated
     S_candidate, S_other = count_two_states_buri_and_expos(st_sasa)
     print(f'Candidates: {S_candidate}')
     print(f'filtered  : {S_other}')
@@ -73,10 +74,15 @@ def main():
     print(f'Cryptic     : {S_cryptic}')
     print(f'Not cryptic : {S_not_cryptic}')
 
-    print(S_candidate.intersection(S_cryptic))
-    print(S_candidate.intersection(S_not_cryptic))
+    #-- common set of residues is yielded
+    N11 = S_candidate.intersection(S_cryptic)
+    N12 = S_candidate.intersection(S_not_cryptic)
+    N21 = S_other.intersection(S_cryptic)
+    N22 = S_other.intersection(S_not_cryptic)
+    print(N11, N12, N21, N22)
 
-#    draw_some(st_sasa)
+    # -- fisher's exact test here
+
     #plt.show()
 
 if __name__=='__main__':
