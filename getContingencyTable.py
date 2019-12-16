@@ -2,7 +2,7 @@
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt
-import isResiInCryptic
+import isResiInCryptic as cr
 
 def ratio_pe_pb(st_sasa_resn):
     bin_start, bin_end, interval = 0, 1, 0.02
@@ -56,21 +56,25 @@ def count_two_states_buri_and_expos(st_sasa):
 
     return set(S_varied), set(S_not_varied)
 
-def draw_some(st_sasa):
-    ratio_pe_pb(st_sasa['PHE66'])
-    ratio_pe_pb(st_sasa['TRP25'])
-    #ratio_pe_pb(st_sasa['PHE105'])
-    ratio_pe_pb(st_sasa['TRP98'])
-    ratio_pe_pb(st_sasa['HIS138'])
-    plt.show()
+def fishersExactTest():
+    pass
 
 def main():
     f1, f2  = open('dict_sasa.pkl','rb'), open('st_dict_sasa.pkl','rb')
     sasa    = pickle.load(f1)
     st_sasa = pickle.load(f2)
 
-    ctable = count_two_states_buri_and_expos(st_sasa)
-    print(f'Candidates: {ctable[0]}, filtered: {ctable[1]}')
+    S_candidate, S_other = count_two_states_buri_and_expos(st_sasa)
+    print(f'Candidates: {S_candidate}')
+    print(f'filtered  : {S_other}')
+
+    pdb, ligand ='3zlr_A.pdb', 'X0B'
+    S_cryptic, S_not_cryptic = cr.isResInCryptic(pdb, ligand, cutoff=4.0)
+    print(f'Cryptic     : {S_cryptic}')
+    print(f'Not cryptic : {S_not_cryptic}')
+
+    print(S_candidate.intersection(S_cryptic))
+    print(S_candidate.intersection(S_not_cryptic))
 
 #    draw_some(st_sasa)
     #plt.show()

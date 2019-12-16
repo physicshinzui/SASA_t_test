@@ -17,18 +17,18 @@ def isResInCryptic(pdbfile, ligname, cutoff=4.0):
 
             distance = np.linalg.norm(iatom.position - jatom.position)
             if distance <= cutoff and jatom.resname in ['PHE','TRP','HIS','TYR']:
-                print(f'{iatom.name}-{iatom.resname}, {jatom.name}-{jatom.resname}{jatom.resid}, {distance}')
+                #print(f'{iatom.name}-{iatom.resname}, {jatom.name}-{jatom.resname}{jatom.resid}, {distance}')
                 resids.append(jatom.resid)
                 s_cryptic.append(f'{jatom.resname}{jatom.resid}')
 
             elif distance > cutoff and jatom.resname in ['PHE','TRP','HIS','TYR']:
                 s_not_cryptic.append(f'{jatom.resname}{jatom.resid}')
 
-    print(f'|s_cryptic| = {len(set(s_cryptic))}, |s_not_cryptic| = {len(set(s_not_cryptic))}')
-    print(f's_cryptic = {set(s_cryptic)}, s_not_cryptic = {set(s_not_cryptic)}')
+#    print(f'|s_cryptic| = {len(set(s_cryptic))}, |s_not_cryptic| = {len(set(s_not_cryptic))}')
+#    print(f's_cryptic = {set(s_cryptic)}, s_not_cryptic = {set(s_not_cryptic)}')
 
     lis = 'sele resi ' + '+'.join([f'{i}' for i in set(resids)])
-    print(lis)
+#    print(lis)
 
     return set(s_cryptic), set(s_not_cryptic)
 
