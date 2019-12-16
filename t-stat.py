@@ -11,8 +11,8 @@ def two_sample_t_test(A, B, target='PHE66', alpha=0.05):
     n_reject= 0
     rejected_residues     = []
     non_rejected_residues = []
-    fout = open(f'{target}_to_others.out','w')
-    fout.write('# pair, t-statisitcs, p-value\n')
+#    fout = open(f'{target}_to_others.out','w')
+#    fout.write('# pair, t-statisitcs, p-value\n')
     for key in A.keys():
         header = key[0:3]
 
@@ -23,7 +23,7 @@ def two_sample_t_test(A, B, target='PHE66', alpha=0.05):
 
             t2, p2 = stats.ttest_ind(A[target], B[key])
 
-            fout.write(f'{target}-{key}, {t2:>12.8}, {p2:<12.8}\n')
+#            fout.write(f'{target}-{key}, {t2:>12.8}, {p2:<12.8}\n')
             if p2 < alpha:
                 print(f'{target}-{key} can be different. (i.e., null hypo. was rejected.)')
                 rejected_residues.append(key)
@@ -35,7 +35,7 @@ def two_sample_t_test(A, B, target='PHE66', alpha=0.05):
                 
             print(f'    {t2:<10.5}, {p2:<10.5}')
             counter += 1
-    fout.close()
+#    fout.close()
     print(f'{n_reject} {counter} {(n_reject / counter) * 100.0}%')
     print(rejected_residues)
     print(non_rejected_residues)
