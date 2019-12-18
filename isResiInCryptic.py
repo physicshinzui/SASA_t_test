@@ -4,36 +4,41 @@ import sys
 from MDAnalysis import Universe
 import scipy.spatial.distance as distance
 
-def isResInCryptic(pdbfile, ligname, cutoff=4.0):
+def classifyResiduesIntoTwo(apo_pdb, holo_pdb, ligname, cutoff=4.0):
 
-    u      = Universe(pdbfile)
-    ligand = u.select_atoms(f'resname {ligname}')
-    protein= u.select_atoms(f'not resname {ligname}')
+    u_holo, u_apo = Universe(holo_pdb), Universe(apo_pdb)
+    ligand = u_holo.select_atoms(f'resname {ligname}')
+    holo   = u_holo.select_atoms(f'not resname {ligname}')
+    apo    = u_apo.select_atoms(f'protein')
 
     resids = []
-    s_cryptic, s_not_cryptic = [], []
+    S_cryptic, S_not_cryptic = [], []
+    # -- calculate distances from atoms of a ligand to those of residues in an apo state
+    # -- the aim is to detect residues in a cryptic site.
+    # -- if the distance is less than a threshold (i.e., CRASHED!), then the aromatic residue is considered as cryptic one.
     for iatom in ligand:
-        for jatom in protein:
-
+        #for jatom in holo:
+        for jatom in apo:
             distance = np.linalg.norm(iatom.position - jatom.position)
+
             if distance <= cutoff and jatom.resname in ['PHE','TRP','HIS','TYR']:
                 #print(f'{iatom.name}-{iatom.resname}, {jatom.name}-{jatom.resname}{jatom.resid}, {distance}')
                 resids.append(jatom.resid)
-                s_cryptic.append(f'{jatom.resname}{jatom.resid}')
+                S_cryptic.append(f'{jatom.resname}{jatom.resid}')
 
-#            elif distance > cutoff and jatom.resname in ['PHE','TRP','HIS','TYR']:
-    s_not_cryptic = [ f'{residue.resname}{residue.resid}' for residue in protein.residues if residue.resname not in ['PHE','TRP','HIS','TYR'] ]
+# -- a set of aromatic residue's names are generated here. note that this is specialised for aromatic residues
+    S_not_cryptic = [ f'{residue.resname}{residue.resid}' for residue in holo.residues
+                        if f'{residue.resname}{residue.resid}' not in S_cryptic and f'{residue.resname}' in ['PHE','TYR','TRP','HIS'] ]
 
-#    print(f'|s_cryptic| = {len(set(s_cryptic))}, |s_not_cryptic| = {len(set(s_not_cryptic))}')
-    print(f's_cryptic = {set(s_cryptic)}, s_not_cryptic = {set(s_not_cryptic)}')
+# -- degug
+    #print(set(S_not_cryptic).intersection(set(S_cryptic)), 'must be nothing.')
 
-    lis = 'sele resi ' + '+'.join([f'{i}' for i in set(resids)])
-#    print(lis)
+    print('This is for PyMol: sele resi ' + '+'.join([f'{i}' for i in set(resids)]))
 
-    return set(s_cryptic), set(s_not_cryptic)
+    return set(S_cryptic), set(S_not_cryptic)
 
 def main():
-    S_cryptic, S_not = isResInCryptic(sys.argv[1], 'X0B')
+    S_cryptic, S_not = classifyResiduesIntoTwo(sys.argv[1], 'X0B')
 
 if __name__ == "__main__":
     main()

@@ -40,7 +40,7 @@ def standardized_sasa(dict_sasa):
 
         else:
             st_dict_sasa[key] = dict_sasa[key]
-    
+
     return st_dict_sasa
 
 def main():
@@ -48,18 +48,18 @@ def main():
     #trj_file = 'test/test.xtc'
     #trj_file = '../../../data/bcl_xl@ambient/data/traj/cat_npt_prod.xtc'
     top = 'template.pdb'
-    traj = md.load(trj_file, top='template.pdb')
+    traj = md.load(trj_file, top=top)
     print(traj)
 
     keys = get_residue_tag(top)
     print(keys)
-    trj_sasa = md.shrake_rupley(traj, 
-                                probe_radius=0.14, 
-                                n_sphere_points=100, 
-                                mode='residue', 
-                                change_radii=None, 
+    trj_sasa = md.shrake_rupley(traj,
+                                probe_radius=0.14,
+                                n_sphere_points=100,
+                                mode='residue',
+                                change_radii=None,
                                 get_mapping=False)
-   
+
     print('sasa data shape', trj_sasa.shape)
     print(len(trj_sasa[0,:]))
 
@@ -79,4 +79,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
