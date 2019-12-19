@@ -13,7 +13,7 @@ def ratioOfPeToPb(std_SASA, buried_upper_limit=0.1):
     Return:
         Reb: Ratio of exposed probability to buried one. Small value indicates buried states are more dominant than exposed.
     """
-    bin_start, bin_end, interval = 0, 1, 0.02
+    bin_start, bin_end, interval = 0, 1, 0.01
     hist = np.histogram(std_SASA, bins=[i for i in np.arange(bin_start,bin_end,interval)])
     probs, bin_edges = hist[0], hist[1]
     half_width       = 0.5 * abs(bin_edges[0] - bin_edges[1])
@@ -34,7 +34,7 @@ def ratioOfPeToPb(std_SASA, buried_upper_limit=0.1):
     plt.xlim(0,1.0)
     return Reb
 
-def isASAVaried(Reb, Reb_lower=0.2, Reb_upper=10.0):
+def isASAVaried(Reb, Reb_lower=0.1, Reb_upper=50.0):
     """
     Args:
         Reb_lower:
@@ -109,8 +109,8 @@ def main():
     apo_pdb = 'template.pdb'
     holo_pdb1 , ligand1 ='3zlr_A.pdb', 'X0B'
     holo_pdb2 , ligand2 ='2yxj_A.pdb', 'N3C'
-    S1_cryptic, S1_not_cryptic = classifyResiduesIntoTwo(apo_pdb, holo_pdb1, ligand1, cutoff=4.)
-    S2_cryptic, S2_not_cryptic = classifyResiduesIntoTwo(apo_pdb, holo_pdb2, ligand2, cutoff=4.)
+    S1_cryptic, S1_not_cryptic = classifyResiduesIntoTwo(apo_pdb, holo_pdb1, ligand1, cutoff=3.)
+    S2_cryptic, S2_not_cryptic = classifyResiduesIntoTwo(apo_pdb, holo_pdb2, ligand2, cutoff=3.)
     S_cryptic     =  S1_cryptic     | S2_cryptic # -- new set from both
     S_not_cryptic =  S1_not_cryptic | S2_not_cryptic
     print(f'Cryptic     : {S_cryptic}')

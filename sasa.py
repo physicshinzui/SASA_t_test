@@ -44,7 +44,8 @@ def standardized_sasa(dict_sasa):
     return st_dict_sasa
 
 def main():
-    trj_file = 'input_traj/cat_npt_prod_skip100.xtc'
+    trj_file = 'input_traj/cat.xtc'
+    #trj_file = 'input_traj/cat_npt_prod_skip100.xtc'
     #trj_file = 'test/test.xtc'
     #trj_file = '../../../data/bcl_xl@ambient/data/traj/cat_npt_prod.xtc'
     top = 'template.pdb'
