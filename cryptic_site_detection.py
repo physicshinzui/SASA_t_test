@@ -50,6 +50,7 @@ def isASAVaried(Reb, Reb_lower=0.034, Reb_upper=29.9):
         return False
 
 def predictCrypticResidues(standardized_SASA):
+    RT = 0.59 # at 300 K
     S_aromatic_resname = set(['PHE','TRP','TYR','HIS'])
     S_varied     = []
     S_not_varied = []
@@ -59,7 +60,7 @@ def predictCrypticResidues(standardized_SASA):
         if key[0:3] in S_aromatic_resname:
             # -- Calculate the ratio (Reb) of exposed states to buried ones.
             Reb = ratioOfPeToPb(standardized_SASA[key])
-            print(f'{key}, {Reb}, {-0.59*np.log(Reb)}')
+            print(f'{key}, {Reb}, {-RT*np.log(Reb)}')
             if isASAVaried(Reb):
                 S_varied.append(key)
 
@@ -94,10 +95,6 @@ def classifyResiduesIntoTwo(apo_pdb, holo_pdb, ligname, cutoff=4.0):
     S_not_cryptic = S_all_aroma - S_cryptic
 
     return set(S_cryptic), set(S_not_cryptic)
-
-def read_params(infile):
-
-    pass
 
 def main():
     # -- input standardized SASA
@@ -138,7 +135,7 @@ def main():
         ftab.write(f'{contingency_table[0][0]}, {contingency_table[0][1]}\n')
         ftab.write(f'{contingency_table[1][0]}, {contingency_table[1][1]}')
 
-    # -- fisher's exact test here
+        # -- fisher's exact test here
     oddsratio, pvalue = stats.fisher_exact(contingency_table)
     print(f'p-value = {pvalue}')
 
