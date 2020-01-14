@@ -95,8 +95,13 @@ def classifyResiduesIntoTwo(apo_pdb, holo_pdb, ligname, cutoff=4.0):
 
     return set(S_cryptic), set(S_not_cryptic)
 
+def read_params(infile):
+
+    pass
+
 def main():
     # -- input standardized SASA
+
     f1 = open('st_dict_sasa.pkl','rb')
     standardized_SASA = pickle.load(f1)
 
@@ -109,8 +114,8 @@ def main():
     apo_pdb = 'template.pdb'
     holo_pdb1 , ligand1 ='3zlr_A.pdb', 'X0B'
     holo_pdb2 , ligand2 ='2yxj_A.pdb', 'N3C'
-    S1_cryptic, S1_not_cryptic = classifyResiduesIntoTwo(apo_pdb, holo_pdb1, ligand1, cutoff=3.)
-    S2_cryptic, S2_not_cryptic = classifyResiduesIntoTwo(apo_pdb, holo_pdb2, ligand2, cutoff=3.)
+    S1_cryptic, S1_not_cryptic = classifyResiduesIntoTwo(apo_pdb, holo_pdb1, ligand1)
+    S2_cryptic, S2_not_cryptic = classifyResiduesIntoTwo(apo_pdb, holo_pdb2, ligand2)
     S_cryptic     =  S1_cryptic     | S2_cryptic # -- new set from both
     S_not_cryptic =  S1_not_cryptic | S2_not_cryptic
     print(f'Cryptic     : {S_cryptic}')
@@ -128,6 +133,10 @@ def main():
     print(f'              Varied   Not Varied')
     print(f'Cryptic     | {contingency_table[0][0]}        {contingency_table[0][1]}')
     print(f'not Cryptic | {contingency_table[1][0]}        {contingency_table[1][1]}')
+    with open('c_table.dat','w') as ftab:
+        ftab.write(f'# Cryptic or Not (rows) vs Varied or Not (colmns)\n')
+        ftab.write(f'{contingency_table[0][0]}, {contingency_table[0][1]}\n')
+        ftab.write(f'{contingency_table[1][0]}, {contingency_table[1][1]}')
 
     # -- fisher's exact test here
     oddsratio, pvalue = stats.fisher_exact(contingency_table)
