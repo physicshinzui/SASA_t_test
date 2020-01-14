@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 from MDAnalysis import Universe
 
-def ratioOfPeToPb(std_SASA, buried_upper_limit=0.1):
+def ratioOfPeToPb(std_SASA, buried_upper_limit=0.15):
     """
     Args:
         std_SASA: [dict] standardized SASA like {PHE105:ASA, ..., TYR200:ASA}
@@ -34,7 +34,7 @@ def ratioOfPeToPb(std_SASA, buried_upper_limit=0.1):
     plt.xlim(0,1.0)
     return Reb
 
-def isASAVaried(Reb, Reb_lower=0.1, Reb_upper=50.0):
+def isASAVaried(Reb, Reb_lower=0.034, Reb_upper=29.9):
     """
     Args:
         Reb_lower:
@@ -59,7 +59,7 @@ def predictCrypticResidues(standardized_SASA):
         if key[0:3] in S_aromatic_resname:
             # -- Calculate the ratio (Reb) of exposed states to buried ones.
             Reb = ratioOfPeToPb(standardized_SASA[key])
-
+            print(f'{key}, {Reb}, {-0.59*np.log(Reb)}')
             if isASAVaried(Reb):
                 S_varied.append(key)
 
@@ -133,7 +133,7 @@ def main():
     oddsratio, pvalue = stats.fisher_exact(contingency_table)
     print(f'p-value = {pvalue}')
 
-    plt.show()
+    #plt.show()
 
 if __name__=='__main__':
     main()
