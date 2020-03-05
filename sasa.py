@@ -18,7 +18,8 @@ def standardized_sasa(dict_sasa):
     sasa_values_of_naked_aa = {'PHE': 3.280,
                                'TYR': 3.433,
                                'TRP': 3.737,
-                               'HIS': 3.136}
+                               'HIS': 3.136,
+                               'ARG': 3.675}
     st_dict_sasa = {}
     print('Note: I do not standardize sasa of non-aromatic residues cuz they are out of my scope.')
     for key in dict_sasa.keys():
@@ -38,6 +39,10 @@ def standardized_sasa(dict_sasa):
         elif key[0:3] == 'HIS':
             print(key)
             st_dict_sasa[key] = dict_sasa[key] / sasa_values_of_naked_aa['HIS']
+
+        elif key[0:3] == 'ARG':
+            print(key)
+            st_dict_sasa[key] = dict_sasa[key] / sasa_values_of_naked_aa['ARG']
 
         else:
             st_dict_sasa[key] = dict_sasa[key]
