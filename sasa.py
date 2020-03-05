@@ -1,7 +1,6 @@
 #!/Users/siida/anaconda3/bin/python
 import numpy as np
 import mdtraj as md
-from MDAnalysis import Universe
 import sys
 import pickle
 
@@ -14,6 +13,7 @@ def parser():
     return args
 
 def get_residue_tag(topology):
+    from MDAnalysis import Universe
     u = Universe(topology)
     residue_tags = []
     for resn, resi in zip(u.residues.resnames, u.residues.resids):
@@ -29,7 +29,7 @@ def standardized_sasa(dict_sasa):
                                'HIS': 3.136,
                                'ARG': 3.675}
     st_dict_sasa = {}
-    print('Note: I do not standardize sasa of non-aromatic residues cuz they are out of my scope.')
+    print('Note: Standardized SASA of non-aromatic residues is not computed.')
     for key in dict_sasa.keys():
 
         if key[0:3] == 'PHE':
@@ -84,9 +84,9 @@ def main():
     st_sasa_dict = standardized_sasa(sasa_dict)
 #    print(sasa_dict['TRP98'][0:3], st_sasa_dict['TRP98'][0:3])
 
-    fout1 = open('dict_sasa.pkl', 'wb')
+    fout1 = open('dict_sasa.pkl'   , 'wb')
     fout2 = open('st_dict_sasa.pkl', 'wb')
-    pickle.dump(sasa_dict, fout1)
+    pickle.dump(sasa_dict   , fout1)
     pickle.dump(st_sasa_dict, fout2)
 
 if __name__ == "__main__":
