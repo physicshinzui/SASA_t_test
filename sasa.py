@@ -5,6 +5,14 @@ from MDAnalysis import Universe
 import sys
 import pickle
 
+def parser():
+    import argparse
+    p = argparse.ArgumentParser()
+    p.add_argument('-f', '--traj', required=True, help='.pdb/.gro/.xtc/.trr ')
+    p.add_argument('-s', '--top' , required=True, help='.pdb/.gro')
+    args = p.parse_args()
+    return args
+
 def get_residue_tag(topology):
     u = Universe(topology)
     residue_tags = []
@@ -50,11 +58,8 @@ def standardized_sasa(dict_sasa):
     return st_dict_sasa
 
 def main():
-    trj_file = 'input_traj/cat.xtc'
-    #trj_file = 'input_traj/cat_npt_prod_skip100.xtc'
-    #trj_file = 'test/test.xtc'
-    #trj_file = '../../../data/bcl_xl@ambient/data/traj/cat_npt_prod.xtc'
-    top = 'template.pdb'
+    args = parser()
+    trj_file, top = args.traj, args.top
     traj = md.load(trj_file, top=top)
     print(traj)
 
