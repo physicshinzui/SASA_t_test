@@ -13,11 +13,12 @@ def get_residue_tag(topology):
     return residue_tags
 
 def standardized_sasa(dict_sasa):
-    # the sasa [nm^2] were calculated for the atoms without hydrogens
-    sasa_values_of_naked_aa = {'PHE': 3.12518,
-                               'TYR': 3.37539,
-                               'TRP': 3.70723,
-                               'HIS': 3.17074}
+    # the sasa [nm^2] were calculated for the atoms without hydrogens via
+    # "compute -> surfae area -> solvent accessible" in PyMol
+    sasa_values_of_naked_aa = {'PHE': 3.280,
+                               'TYR': 3.433,
+                               'TRP': 3.737,
+                               'HIS': 3.136}
     st_dict_sasa = {}
     print('Note: I do not standardize sasa of non-aromatic residues cuz they are out of my scope.')
     for key in dict_sasa.keys():
