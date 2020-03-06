@@ -1,7 +1,5 @@
 #!/Users/siida/anaconda3/bin/python
-import numpy as np
 import mdtraj as md
-import sys
 import pickle
 
 def parser():

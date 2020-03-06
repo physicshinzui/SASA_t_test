@@ -1,5 +1,4 @@
 #!/Users/siida/anaconda3/bin/python
-import numpy as np
 from sys import exit
 import pickle
 from scipy import stats
