@@ -4,14 +4,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 from MDAnalysis import Universe
+import sys
 
-def ratioOfPeToPb(std_SASA, buried_upper_limit=0.15):
+def ratioOfPeToPb(std_SASA, buried_upper_limit=0.1):
     """
     Args:
         std_SASA: [dict] standardized SASA like {PHE105:ASA, ..., TYR200:ASA}
         buried_upper_limit: [float] upper limit of buriedness (standardized SASA) [no unit]
     Return:
-        Reb: Ratio of exposed probability to buried one. Small value indicates buried states are more dominant than exposed.
+        Rbe: Ratio of exposed probability to buried one. Small value indicates buried states are more dominant than exposed.
     """
     bin_start, bin_end, interval = 0, 1, 0.01
     hist = np.histogram(std_SASA, bins=[i for i in np.arange(bin_start,bin_end,interval)])
@@ -26,27 +27,28 @@ def ratioOfPeToPb(std_SASA, buried_upper_limit=0.15):
     Pb       = [probs[j] for j in index_Pb]
     xb       = hist_xpoints[hist_xpoints < buried_upper_limit]
 
-    Reb = np.sum(Pe) / np.sum(Pb) # R_eb, the more it is, the more exposed and vice versa.
+    Rbe = np.sum(Pb) / np.sum(Pe) # R_eb, the more it is, the more exposed and vice versa.
 
     plt.plot(xe, Pe)
     plt.plot(xb, Pb)
     plt.axvline(x=buried_upper_limit, c='black')
     plt.xlim(0,1.0)
-    return Reb
+    plt.show()
+    return Rbe
 
-def isASAVaried(Reb, Reb_lower=0.034, Reb_upper=29.9):
+def isASAVaried(Rbe, Rbe_lower=0.034, Rbe_upper=29.9):
     """
     Args:
-        Reb_lower:
-        Reb_upper:
+        Rbe_lower:
+        Rbe_upper:
     Returns:
         True or False
     """
-    # -- Reb thresholds
-    if Reb > Reb_lower and Reb < Reb_upper:
+    # -- Rbe thresholds
+    if Rbe > Rbe_lower and Rbe < Rbe_upper:
         return True
 
-    elif Reb >= Reb_upper or Reb <= Reb_lower:
+    elif Rbe >= Rbe_upper or Rbe <= Rbe_lower:
         return False
 
 def predictCrypticResidues(standardized_SASA):
@@ -54,20 +56,36 @@ def predictCrypticResidues(standardized_SASA):
     S_aromatic_resname = set(['PHE','TRP','TYR','HIS'])
     S_varied     = []
     S_not_varied = []
+    scores       = {}
     for key in standardized_SASA:
         # -- I just concentrate on aromatic residues.
         # -- the iput pkl file must be modified if you want to check the other residues out, because they've not been normalised.
         if key[0:3] in S_aromatic_resname:
-            # -- Calculate the ratio (Reb) of exposed states to buried ones.
-            Reb = ratioOfPeToPb(standardized_SASA[key])
-            print(f'{key}, {Reb}, {-RT*np.log(Reb)}')
-            if isASAVaried(Reb):
+
+            # -- Calculate the ratio (Rbe) of buried to exposed states
+            Rbe = ratioOfPeToPb(standardized_SASA[key])
+            F   = -RT*np.log(Rbe)
+
+            if Rbe < 10**-4 or Rbe > 10**4: F = np.inf # shreshold
+            #if np.abs(F) > 3: F = np.inf # shreshold
+
+            scores[key] = F
+
+            print(f'{key}, {Rbe}, {F}')
+
+            if isASAVaried(Rbe):
                 S_varied.append(key)
 
             else:
                 S_not_varied.append(key)
 
-    return set(S_varied), set(S_not_varied)
+    min_score = np.min((list(scores.values())))
+    for key in scores:
+        scores[key] = scores[key] - min_score
+
+    scores = sorted(scores.items(), key=lambda x:x[1])
+    print(scores)
+    return scores #set(S_varied), set(S_not_varied)
 
 def classifyResiduesIntoTwo(apo_pdb, holo_pdb, ligname, cutoff=4.0):
     S_aromatic_resname = set(['PHE','TRP','TYR','HIS'])
@@ -97,15 +115,22 @@ def classifyResiduesIntoTwo(apo_pdb, holo_pdb, ligname, cutoff=4.0):
     return set(S_cryptic), set(S_not_cryptic)
 
 def main():
+
     # -- input standardized SASA
 
     f1 = open('st_dict_sasa.pkl','rb')
     standardized_SASA = pickle.load(f1)
 
     # -- sets of residues are generated
-    S_candidate, S_other = predictCrypticResidues(standardized_SASA)
-    print(f'Candidates: {S_candidate}')
-    print(f'Others    : {S_other}')
+    #S_candidate, S_other = predictCrypticResidues(standardized_SASA)
+    #print(f'Candidates: {S_candidate}')
+    #print(f'Others    : {S_other}')
+
+    scores = predictCrypticResidues(standardized_SASA)
+    for line in scores:
+        print(line)
+
+    sys.exit()
 
     # -- two holo for bcl-xl are considered to get the union of two residue sets.
     apo_pdb = 'template.pdb'

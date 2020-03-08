@@ -9,12 +9,12 @@ def parser():
     p.add_argument('-f', '--sasa_table'   , required=True, help='.pkl')
     p.add_argument('-l', '--residue_list' , nargs='*', required=True, help='e.g. PHE66')
     p.add_argument('-ps', '--plot_style'  , default='plot', help='hist/plot')
-    p.add_argument('-b', '--begin'  , type=int, help='')
+    p.add_argument('-b', '--begin'  , type=int, default=0, help='')
     #p.add_argument('-e', '--end'    , type=int, help='')
     args = p.parse_args()
     return args
 
-def draw(std_SASA, label, buried_upper_limit=0.2):
+def draw(std_SASA, label, buried_upper_limit=0.05):
     """
     Args:
         std_SASA: [dict] standardized SASA like {PHE105:ASA, ..., TYR200:ASA}
@@ -29,9 +29,11 @@ def draw(std_SASA, label, buried_upper_limit=0.2):
     hist_xpoints     = np.array([edge+half_width for edge in bin_edges[:-1]])
 
     plt.plot(hist_xpoints, probs, label=label)
-    plt.axvline(x=buried_upper_limit, c='black')
+    plt.axvline(x=buried_upper_limit, c='black', linestyle='--')
     plt.xlim(0,1.0)
-    plt.ylim(0,0.8)
+    plt.ylim(0,0.6)
+    plt.xlabel('relative SASA [nm^2]')
+    plt.ylabel('Probability')
 
 def main():
     """
@@ -66,7 +68,7 @@ def main():
     elif style == 'plot':
         plt.savefig('fig_sasa_series.png' , dpi=300)
 
-    #plt.show()
+    plt.show()
 
 if __name__ == '__main__':
     main()

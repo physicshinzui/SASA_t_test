@@ -1,0 +1,50 @@
+ATOM      1  N   ALA     1      -1.405  -4.571  -0.832  1.00  0.00           N  
+ATOM      2  CA  ALA     1       0.050  -4.557  -1.077  1.00  0.00           C  
+ATOM      3  C   ALA     1       0.517  -3.100  -1.245  1.00  0.00           C  
+ATOM      4  O   ALA     1      -0.036  -2.322  -2.020  1.00  0.00           O  
+ATOM      5  CB  ALA     1       0.385  -5.338  -2.339  1.00  0.00           C  
+ATOM      6  N   TRP     2       1.578  -2.750  -0.449  1.00  0.00           N  
+ATOM      7  CA  TRP     2       2.132  -1.398  -0.429  1.00  0.00           C  
+ATOM      8  C   TRP     2       3.656  -1.569  -0.402  1.00  0.00           C  
+ATOM      9  O   TRP     2       4.201  -2.494   0.203  1.00  0.00           O  
+ATOM     10  CB  TRP     2       1.694  -0.602   0.810  1.00  0.00           C  
+ATOM     11  CG  TRP     2       0.220  -0.324   0.847  1.00  0.00           C  
+ATOM     12  CD1 TRP     2      -0.728  -1.024   1.569  1.00  0.00           C  
+ATOM     13  CD2 TRP     2      -0.478   0.701   0.129  1.00  0.00           C  
+ATOM     14  CE2 TRP     2      -1.835   0.564   0.420  1.00  0.00           C  
+ATOM     15  CE3 TRP     2      -0.082   1.726  -0.755  1.00  0.00           C  
+ATOM     16  NE1 TRP     2      -1.958  -0.488   1.295  1.00  0.00           N  
+ATOM     17  CZ2 TRP     2      -2.818   1.392  -0.136  1.00  0.00           C  
+ATOM     18  CZ3 TRP     2      -1.052   2.566  -1.317  1.00  0.00           C  
+ATOM     19  CH2 TRP     2      -2.400   2.397  -1.012  1.00  0.00           C  
+ATOM     20  N   ALA     3       4.367  -0.609  -1.079  1.00  0.00           N  
+ATOM     21  CA  ALA     3       5.817  -0.656  -1.194  1.00  0.00           C  
+ATOM     22  C   ALA     3       6.325   0.746  -1.486  1.00  0.00           C  
+ATOM     23  O   ALA     3       5.595   1.678  -1.823  1.00  0.00           O  
+ATOM     24  CB  ALA     3       6.259  -1.595  -2.307  1.00  0.00           C  
+TER   
+CONECT    1    2
+CONECT    2    1    3    5
+CONECT    3    2    4    6
+CONECT    4    3
+CONECT    5    2
+CONECT    6    3    7
+CONECT    7    6    8   10
+CONECT    8    7    9   20
+CONECT    9    8
+CONECT   10    7   11
+CONECT   11   10   12   13
+CONECT   12   11   16
+CONECT   13   11   14   15
+CONECT   14   13   16   17
+CONECT   15   13   18
+CONECT   16   12   14
+CONECT   17   14   19
+CONECT   18   15   19
+CONECT   19   17   18
+CONECT   20    8   21
+CONECT   21   20   22   24
+CONECT   22   21   23
+CONECT   23   22
+CONECT   24   21
+END
